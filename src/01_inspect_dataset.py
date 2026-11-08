@@ -1,5 +1,5 @@
 import pandas as pd
-markets = pd.read_csv(r'C:\Users\Alicja\PycharmProjects\PythonProject\data\raw\christmas_markets_2026.csv')
+markets = pd.read_csv(r'data/raw/christmas_markets_2026.csv')
 print(markets.head())
 markets.info()
 print(markets.isna().sum())
