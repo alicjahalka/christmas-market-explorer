@@ -1,0 +1,36 @@
+import pandas as pd
+markets = pd.read_csv(r'C:\Users\Alicja\PycharmProjects\PythonProject\data\raw\christmas_markets_2026.csv')
+print(markets.head())
+markets.info()
+print(markets.isna().sum())
+missing_dates = markets[markets['start_date'].isna()]
+print(missing_dates[['name_en','city', 'start_date']])
+print(markets.groupby('country').agg({'city':'count'}).sort_values('city', ascending=False))
+markets_number = markets.groupby('country').agg({'city':'count'}).sort_values('city', ascending=False)
+markets_number = markets_number.reset_index()
+print(markets_number[['country','city']][markets_number['city']>3].sort_values('city', ascending=False))
+print(markets['id'].duplicated().sum())
+print(markets.isna().sum())
+
+print('===DATA VALIDATION===')
+
+markets_clean = markets.copy()
+print('\nStart Date:')
+markets_clean['start_date'] = pd.to_datetime(markets_clean['start_date'], errors='coerce')
+markets['start_date'].info()
+markets_clean['start_date'].info()
+print('\nEnd Date:')
+markets_clean['end_date'] = pd.to_datetime(markets_clean['end_date'], errors='coerce')
+markets['end_date'].info()
+markets_clean['end_date'].info()
+print('\n=== MARKET DURATION ===')
+print('\nDuration days:')
+markets_clean['duration_days'] = markets_clean['end_date'] - markets_clean['start_date']
+markets_clean['duration_days'] = markets_clean['duration_days'].dt.days
+markets_clean['duration_days'] = markets_clean['duration_days'].astype('Int64')
+print(markets_clean[['name_en', 'start_date', 'end_date','duration_days']].head())
+markets_clean.sort_values('duration_days', ascending=False).head()
+print('\nAVG duration days:')
+print(round(markets_clean['duration_days'].mean(),2))
+print('\nAVG duration days by country:')
+print(round(markets_clean.groupby('country').agg({'duration_days':'mean'}).sort_values('duration_days', ascending=False).head(),2))
