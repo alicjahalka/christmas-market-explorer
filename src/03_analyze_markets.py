@@ -1,20 +1,20 @@
 import pandas as pd
 from numpy.typing.mypy_plugin import plugin
 
-analyze_markets = pd.read_csv(r'C:\Users\Alicja\PycharmProjects\PythonProject\data\processed\christmas_markets_clean.csv')
+analyze_markets = pd.read_csv(r'data/processed/christmas_markets_clean.csv')
 print(analyze_markets.head())
 analyze_markets.info()
 analyze_markets['start_date'] = pd.to_datetime(analyze_markets['start_date'], errors='coerce')
 analyze_markets['end_date'] = pd.to_datetime(analyze_markets['end_date'], errors='coerce')
 earliest_date = analyze_markets[['name_en','city', 'country','start_date']].sort_values(by=['start_date']).head(10)
-earliest_date.to_csv(r'C:\Users\Alicja\PycharmProjects\PythonProject\data\processed\earliest_christmas_markets_2026.csv', index=False)
+earliest_date.to_csv(r'data/processed/earliest_christmas_markets_2026.csv', index=False)
 earliest_by_country = analyze_markets.groupby('country').agg({'start_date':'min'}).reset_index()
 print(earliest_by_country.sort_values(by=['start_date'], ascending=True))
 merge_earliest_christmas_markets = pd.merge(left=earliest_by_country, right=analyze_markets, on=['country','start_date'])
 print(merge_earliest_christmas_markets.head())
 earliest_markets_by_country = merge_earliest_christmas_markets[['country','name_en', 'city','start_date']].sort_values(by=['start_date'])
 print(earliest_markets_by_country.head())
-earliest_markets_by_country.to_csv(r'C:\Users\Alicja\PycharmProjects\PythonProject\data\processed\earliest_christmas_markets_by_country_2026.csv', index=False)
+earliest_markets_by_country.to_csv(r'data/processed/earliest_christmas_markets_by_country_2026.csv', index=False)
 
 print('\nMARKETS OPEN IN DEC 6TH')
 selected_date = pd.to_datetime('2026-12-06')
@@ -66,4 +66,4 @@ analyze_markets_by_months = analyze_markets.groupby('months').agg({'start_date':
 analyze_markets_by_months = analyze_markets_by_months.reset_index()
 analyze_markets_by_months = analyze_markets_by_months.rename(columns={'start_date':'start_by_months'})
 print(analyze_markets_by_months)
-analyze_markets_by_months.to_csv(r'C:\Users\Alicja\PycharmProjects\PythonProject\data\processed\christmas_markets_by_month_2026.csv',index=False)
+analyze_markets_by_months.to_csv(r'data/processed/christmas_markets_by_month_2026.csv',index=False)
